@@ -1,0 +1,47 @@
+/folder-architecture.md
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and database files
+*.log
+*.sqlite3
+*.db
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Coverage and testing reports
+htmlcov/
+.coverage
+*.cover
+.cache
+nosetests.xml
+coverage.xml
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.manifest
+*.spec
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
