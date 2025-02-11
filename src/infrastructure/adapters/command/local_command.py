@@ -3,17 +3,37 @@ import subprocess
 
 
 class LocalCommand(CommandeInterface):
-    def execute(self, command):
-        if not command:
-            raise ValueError("command cannot be null or empty")
 
+    def _validate_command(self, command):
+        if not command:
+            raise ValueError("Command cannot be null or empty")
+
+    def _check_error(self, stderr):
+        if stderr:
+            print("Error executing command: {}".format(stderr))
+
+    def _check_output_error(self, stdout):
+        if not stdout:
+            print("Error: No output from command execution")
+    def _convert_to_string(self, stdout):
+        return stdout.decode("utf-8")
+
+    def execute(self, command):
+        self._validate_command(command)
+        print("Executing command: {}".format(command))
         try:
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                command, shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.PIPE
+            )
             stdout, stderr = process.communicate()
-            if stderr:
-                print("Error executing command: {}".format(stderr.decode('utf-8')))
-            return stdout.decode('utf-8')
+
+            self._check_error(stderr)
+            self._check_output_error(stdout)
+            
+            return self._convert_to_string(stdout)
         except subprocess.CalledProcessError as e:
-            if hasattr(e, 'output') and e.output:
-                print("Error executing command: {}".format(e.output.decode('utf-8')))
+            print("Error executing command: {}".format(getattr(e, 'output', 'Unknown error')))
             raise
