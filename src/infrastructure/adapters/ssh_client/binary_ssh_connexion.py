@@ -7,13 +7,16 @@ class BinarySSHConnexion(SSHClientInterface):
     def __init__(self, command_executor):
         self.command_executor = command_executor
 
-    def _create_ssh_command(self, host, port, user, command=None, timeout=None):
+    def _create_ssh_command(self, host, port, user, command=None, key=None,timeout=None):
         """
         Creates the ssh command as a list of strings.
         :return: The ssh command as a list of strings.
         """
         command_parts = ['ssh']
+        if key is not None:
+            command_parts.extend(['-i', key])
 
+        
         if port is not None:
             command_parts.extend(['-p', str(port)])
 
@@ -29,11 +32,14 @@ class BinarySSHConnexion(SSHClientInterface):
         return command_parts
 
     def connect(self, host, port, user, command=None, password=None, key=None, key_passphrase=None, timeout=None):
-        ssh_command = self._create_ssh_command(host, port, user, command, timeout)
+        ssh_command = self._create_ssh_command(host, port, user, command, key,timeout)
         ssh_command_str = ' '.join(ssh_command)
 
         if password:
             print("Direct password authentication is not supported. Please use key authentication.")
+        if key_passphrase is not None:
+            print("Key passphrase is not supported. Please use an unencrypted key.")
+
 
         return self.command_executor.execute(ssh_command_str)
 
