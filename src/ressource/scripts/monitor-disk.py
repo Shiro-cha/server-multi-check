@@ -1,3 +1,4 @@
+import json
 import os
 
 class MountedFilesystemReader:
@@ -70,7 +71,8 @@ class FilesystemUsageCalculator:
                 'usage_percent': usage_percent(used_space, total_space)
             }
         except OSError:
-            return None
+            print("Unable to access filesystem.")
+            return OSError
 
 
 class FilesystemUsageFormatter:
@@ -91,11 +93,11 @@ class FilesystemUsageFormatter:
             
         # JSON-like formatting
         json_format = {
-            'MountPoint': usage['mount_point'],
-            'Total': usage['total_gb'],
-            'Used': usage['used_gb'],
-            'Free': usage['free_gb'],
-            'Available': available_gb
+            "MountPoint": usage["mount_point"],
+            "Total": usage["total_gb"],
+            "Used": usage["used_gb"],
+            "Free": usage["free_gb"],
+            "Available": available_gb
         }
         
         return json_format
@@ -115,13 +117,14 @@ class FilesystemReporter:
         Generate a report for all mounted filesystems.
         """
         mounted_points = self.reader.get_mounted_filesystems()
+        disk_usage = []
         for mount_point in mounted_points:
             calculator = self.calculator(mount_point)
             usage = calculator.get_usage()
-            print(self.formatter.format(usage))
-            print('')
+            formatted = self.formatter.format(usage)
+            disk_usage.append(formatted)
 
-
+        print(json.dumps(disk_usage))
 # Main execution
 if __name__ == "__main__":
     reader = MountedFilesystemReader()

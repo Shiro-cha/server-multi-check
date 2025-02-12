@@ -17,7 +17,8 @@ class FetchMetricsUseCase:
         try:
             print("Fetching metrics for server {}".format(server["ip_address"]))
             output = self.ssh_client.connect(server["ip_address"], server["port"], server["user"], command)
-            return output
+            print("to json")
+            return self._to_json(output)
         except Exception as e:
             print("Error fetching metrics for server {}: {}".format(server["ip_address"], str(e)))
             return output
@@ -26,8 +27,13 @@ class FetchMetricsUseCase:
             return json.loads(myjson)
             
         except ValueError as e:
+            print("Error parsing JSON: {}".format(str(e)))
             return myjson
         
     def get_disk_usage(self,server):
         command = "'python -' < src/ressource/scripts/monitor-disk.py"
-        self._execute(server,command)
+        return self._execute(server,command)[0]
+
+    def get_cpu_memory_usage(self,server):
+        command = "'python -' < src/ressource/scripts/cpu-memory.py"
+        return self._execute(server,command)["cpu_usage"]
