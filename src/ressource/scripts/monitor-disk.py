@@ -42,18 +42,15 @@ class FilesystemUsageCalculator:
         try:
             stat = os.statvfs(self.path)
 
-            # Calculate block sizes
-            block_size = stat.f_frsize  # Filesystem block size
-            total_blocks = stat.f_blocks  # Total number of blocks
-            free_blocks = stat.f_bfree  # Number of free blocks
-            available_blocks = stat.f_bavail  # Number of blocks available to non-root users
+            block_size = stat.f_frsize  
+            total_blocks = stat.f_blocks  
+            free_blocks = stat.f_bfree 
+            available_blocks = stat.f_bavail  
 
-            # Calculate space in bytes
             total_space = total_blocks * block_size
             free_space = free_blocks * block_size
             used_space = total_space - free_space
 
-            # Convert bytes to gigabytes
             def bytes_to_gb(bytes_value):
                 if bytes_value is None:
                     return 0
@@ -73,7 +70,6 @@ class FilesystemUsageCalculator:
                 'usage_percent': usage_percent(used_space, total_space)
             }
         except OSError:
-            # Skip filesystems that cannot be accessed (e.g., network mounts)
             return None
 
 
@@ -91,21 +87,18 @@ class FilesystemUsageFormatter:
         try:
             available_gb = usage['available_gb']
         except KeyError:
-            available_gb = 0  # Avoid KeyError if missing
+            available_gb = 0
+            
+        # JSON-like formatting
+        json_format = {
+            'MountPoint': usage['mount_point'],
+            'Total': usage['total_gb'],
+            'Used': usage['used_gb'],
+            'Free': usage['free_gb'],
+            'Available': available_gb
+        }
         
-        return (
-            "Mount Point: %s\n"
-            "Total: %.2f GB\n"
-            "Used: %.2f GB\n"
-            "Free: %.2f GB\n"
-            "Available: %.2f GB" % (
-                usage['mount_point'],
-                usage['total_gb'],
-                usage['used_gb'],
-                usage['free_gb'],
-                available_gb
-            )
-        )
+        return json_format
 
 
 class FilesystemReporter:

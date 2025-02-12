@@ -1,5 +1,8 @@
 #from src.core.services.monitor import MonitorService
 
+import json
+
+
 class FetchMetricsUseCase:
     def __init__(self, ssh_client):
         """
@@ -9,19 +12,22 @@ class FetchMetricsUseCase:
         self.ssh_client = ssh_client
         #self.monitor_service = monitor_service
 
-    def execute(self, server):
-        """
-        Fetches metrics from a server via SSH
-        :param server: Server instance containing connection details
-        :return: Dict of fetched metrics
-        """
-        command = "df -h"
-        print(server)
+    def _execute(self, server,command):
+        
         try:
             print("Fetching metrics for server {}".format(server["ip_address"]))
             output = self.ssh_client.connect(server["ip_address"], server["port"], server["user"], command)
-            #metrics = self.monitor_service.parse_metrics(output)
             return output
         except Exception as e:
             print("Error fetching metrics for server {}: {}".format(server["ip_address"], str(e)))
-            return None
+            return output
+    def _to_json(self, myjson):
+        try:
+            return json.loads(myjson)
+            
+        except ValueError as e:
+            return myjson
+        
+    def get_disk_usage(self,server):
+        command = "'python -' < src/ressource/scripts/monitor-disk.py"
+        self._execute(server,command)
