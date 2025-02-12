@@ -1,14 +1,13 @@
-from src.core.services.monitor import MonitorService
-from src.infrastructure.adapters.ssh_client import SSHClient
+#from src.core.services.monitor import MonitorService
 
 class FetchMetricsUseCase:
-    def __init__(self, ssh_client, monitor_service):
+    def __init__(self, ssh_client):
         """
         :param ssh_client: Instance of SSHClient to handle SSH connections
         :param monitor_service: Instance of MonitorService to process metrics
         """
         self.ssh_client = ssh_client
-        self.monitor_service = monitor_service
+        #self.monitor_service = monitor_service
 
     def execute(self, server):
         """
@@ -16,12 +15,13 @@ class FetchMetricsUseCase:
         :param server: Server instance containing connection details
         :return: Dict of fetched metrics
         """
-        command = "cat /proc/meminfo && cat /proc/stat && df -h"
-        
+        command = "df -h"
+        print(server)
         try:
-            output = self.ssh_client.execute_command(server, command)
+            print("Fetching metrics for server {}".format(server["ip_address"]))
+            output = self.ssh_client.connect(server["ip_address"], server["port"], server["user"], command)
             #metrics = self.monitor_service.parse_metrics(output)
             return output
         except Exception as e:
-            print("Error fetching metrics for server {}: {}".format(server.host, str(e)))
+            print("Error fetching metrics for server {}: {}".format(server["ip_address"], str(e)))
             return None
