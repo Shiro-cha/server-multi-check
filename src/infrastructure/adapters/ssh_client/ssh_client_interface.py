@@ -1,15 +1,14 @@
-from abc import ABCMeta, abstractmethod
+import abc
 
 
-class SSHClientInterface(ABCMeta):
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
+class SSHClientInterface(object):
+    __metaclass__ = abc.ABCMeta
+    @abc.abstractmethod
     def connect(selft, host,port,user,password):
         """Establishes a connection to the host"""
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def close(self):
         """Closes the connection"""
         pass
