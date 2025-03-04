@@ -4,7 +4,9 @@
             "name": "192.168.10.201",
             "ip_address": "192.168.10.201",
             "port": 8442, 
-            "user": "nomena30"
+            "user": "nomena30",
+            "password": "nomena30",
+            "key": "nomena30"
         }
     ] 
 }
