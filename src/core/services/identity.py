@@ -4,4 +4,5 @@ class IdentityService:
     def install_identity(self):
         server_config = self.config.load_config("servers")
         print(server_config)
+        print("Identity installed")
         return "Identity installed"
