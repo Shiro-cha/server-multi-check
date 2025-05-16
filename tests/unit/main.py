@@ -1,4 +1,4 @@
-
+import json
 from src.core.services.identity import IdentityService
 from src.core.services.monitor import MonitorService
 from src.core.use_cases.install_identity import InstallIdentityUseCase
@@ -34,15 +34,26 @@ use_case = InstallIdentityUseCase(identity_service)
 use_case.execute()
 
 
-#monitorservice = MonitorService(config,ssh)
+monitorservice = MonitorService(config,ssh)
 #command = "'python -' < src/ressource/scripts/monitor-disk.py"
 #monitorservice.start(command)
 #for output in monitorservice.start(command):
 #    print(output)
 
-#fetch = FetchMetricsUseCase(monitorservice)
-#print("=======disk usage=======")
-#print(fetch.get_disk_usage())
+fetch = FetchMetricsUseCase(monitorservice)
+print("=======disk usage=======")
+disk_usage = fetch.get_disk_usage()
+# convert the json string to a python dictionary
+if disk_usage:
+    disk_usage_dict = json.loads(disk_usage)
+    for disk in disk_usage_dict:
+        print(disk)
+        print(f"MountPoint: {disk['MountPoint']}")
+        print(f"  Total: {round(disk['Total'], 1)} GB")
+        print(f"  Used: {round(disk['Used'], 1)} GB")
+        print(f"  Free: {round(disk['Free'], 1)} GB")
+        print(f"  Available: {round(disk['Available'], 1)} GB")
+        print("-" * 40)
 
 #print("=======cpu memory usage=======")
 #print(fetch.get_cpu_memory_usage())

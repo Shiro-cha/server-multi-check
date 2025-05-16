@@ -1,12 +1,12 @@
 {
     "servers": [
         {
-            "name": "192.168.10.201",
-            "ip_address": "192.168.10.201",
-            "port": 8442, 
-            "user": "nomena30",
-            "password": "nomena30",
-            "key": "nomena30"
+            "name": "172.16.106.90",
+            "ip_address": "172.16.106.90",
+            "port": 22, 
+            "user": "act750support",
+            "password": "6BF6pzkQMp5br&cJ",
+            "key": "/home/nomena30/.ssh/id_rsa"
         }
     ] 
 }
